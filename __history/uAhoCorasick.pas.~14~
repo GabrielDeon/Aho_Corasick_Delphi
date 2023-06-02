@@ -1,0 +1,156 @@
+unit uAhoCorasick;
+
+interface
+
+uses
+  System.Classes, System.SysUtils;
+
+type
+  TNode = class
+  public
+    Next: array[Char] of TNode;
+    Fail: TNode;
+    IsWord: Boolean;
+    Word: string;
+    constructor Create;
+    function GetNext(ch: Char): TNode;
+  end;
+
+  TMatchResult = record
+    Word: string;
+    Position: Integer;
+  end;
+
+  TAhoCorasick = class
+  private
+    FRoot: TNode;
+    procedure AddWord(const word: string);
+  public
+    constructor Create;
+    destructor Destroy; override;
+    procedure Build;
+    function FindWords(const text: string): TArray<TMatchResult>;
+  end;
+
+implementation
+
+{ TNode }
+
+constructor TNode.Create;
+begin
+  inherited Create;
+  FillChar(Next, SizeOf(Next), 0);
+  Fail := nil;
+  IsWord := False;
+  Word := '';
+end;
+
+function TNode.GetNext(ch: Char): TNode;
+begin
+  Result := Next[ch];
+end;
+
+{ TAhoCorasick }
+
+constructor TAhoCorasick.Create;
+begin
+  inherited Create;
+  FRoot := TNode.Create;
+end;
+
+destructor TAhoCorasick.Destroy;
+begin
+  FRoot.Free;
+  inherited Destroy;
+end;
+
+procedure TAhoCorasick.AddWord(const word: string);
+var
+  currentNode: TNode;
+  i: Integer;
+  sAnsiChar: AnsiChar;
+begin
+  currentNode := FRoot;
+  for i := 1 to Length(word) do
+  begin
+
+    if currentNode.GetNext(word[i]) = nil then
+      currentNode.Next[word[i]] := TNode.Create;
+    currentNode := currentNode.GetNext(word[i]);
+  end;
+  currentNode.IsWord := True;
+  currentNode.Word := word;
+end;
+
+procedure TAhoCorasick.Build;
+var
+  queue: TList<TNode>;
+  currentNode, r, s: TNode;
+  ch: AnsiChar;
+begin
+  queue := TList<TNode>.Create;
+  try
+    queue.Add(FRoot);
+    while queue.Count > 0 do
+    begin
+      r := queue.First;
+      queue.Delete(0);
+      for ch := Low(AnsiChar) to High(AnsiChar) do
+      begin
+        if r.GetNext(ch) <> nil then
+        begin
+          s := r.GetNext(ch);
+          queue.Add(s);
+          currentNode := r.Fail;
+          while (currentNode <> nil) and (currentNode.GetNext(ch) = nil) do
+            currentNode := currentNode.Fail;
+          if currentNode = nil then
+            s.Fail := FRoot
+          else
+            s.Fail := currentNode.GetNext(ch);
+        end;
+      end;
+    end;
+  finally
+    queue.Free;
+  end;
+end;
+
+function TAhoCorasick.FindWords(const text: string): TArray<TMatchResult>;
+var
+  currentNode, r, s: TNode;
+  i: Integer;
+  ch: AnsiChar;
+  matches: TArray<TMatchResult>;
+  matchCount: Integer;
+begin
+  matchCount := 0;
+  SetLength(matches, 0);
+  currentNode := FRoot;
+  for i := 1 to Length(text) do
+  begin
+    while (currentNode <> nil) and (currentNode.GetNext(text[i]) = nil) do
+      currentNode := currentNode.Fail;
+    if currentNode = nil then
+      currentNode := FRoot
+    else
+      currentNode := currentNode.GetNext(text[i]);
+    r := currentNode;
+    s := r;
+    while s <> FRoot do
+    begin
+      if s.IsWord then
+      begin
+        Inc(matchCount);
+        SetLength(matches, matchCount);
+        matches[matchCount - 1].Word := s.Word;
+        matches[matchCount - 1].Position := i - Length(s.Word) + 1;
+      end;
+      s := s.Fail;
+    end;
+  end;
+  Result := matches;
+end;
+
+end.
+
