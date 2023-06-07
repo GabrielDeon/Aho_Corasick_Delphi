@@ -121,8 +121,7 @@ object frmPrincipal: TfrmPrincipal
       ShowCaption = False
       TabOrder = 1
       StyleElements = [seFont, seClient]
-      ExplicitLeft = 49
-      ExplicitTop = 10
+      ExplicitLeft = 0
       object Label3: TLabel
         Left = 15
         Top = 61
@@ -460,13 +459,12 @@ object frmPrincipal: TfrmPrincipal
       end
       object ckbDestacar: TCheckBox
         Left = 15
-        Top = 303
-        Width = 154
+        Top = 304
+        Width = 161
         Height = 17
         Caption = 'Destacar Ocorr'#234'ncias'
-        Enabled = False
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWhite
+        Font.Color = clWindowText
         Font.Height = -13
         Font.Name = 'Segoe UI'
         Font.Style = []

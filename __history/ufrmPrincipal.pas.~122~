@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.ComCtrls,
   Vcl.Imaging.jpeg, Vcl.WinXPanels, Vcl.Mask, uAhoCorasick, Vcl.OleCtrls,
-  SHDocVw;
+  SHDocVw, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient, IdHTTP;
 
 type
   TfrmPrincipal = class(TForm)
@@ -41,6 +41,8 @@ type
     Label11: TLabel;
     mmLog: TRichEdit;
     ckbDestacar: TCheckBox;
+    IdHTTP1: TIdHTTP;
+    ckbCaseSensititve: TCheckBox;
     procedure btnProcurarClick(Sender: TObject);
     procedure btnClearClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -124,8 +126,6 @@ begin
         ShowMessage('Nenhuma ocorrência encontrada!');
       end;
 
-
-
     finally
       AhoCorasick.Free;
       mmLog.Refresh;
@@ -143,7 +143,13 @@ begin
 
   // Percorre o texto do RichEdit em busca da palavra
   repeat
-    FoundPos := RichEdit.FindText(SearchWord, StartPos, Length(RichEdit.Text), []);
+    if(ckbCaseSensititve.Checked) then
+    begin
+      FoundPos := RichEdit.FindText(SearchWord, StartPos, Length(RichEdit.Text), [stMatchCase]);
+    end else
+    begin
+      FoundPos := RichEdit.FindText(SearchWord, StartPos, Length(RichEdit.Text), []);
+    end;
 
     // Se a palavra for encontrada, altera a cor de fundo
     if FoundPos >= 0 then

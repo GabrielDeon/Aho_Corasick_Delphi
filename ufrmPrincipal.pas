@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.ComCtrls,
   Vcl.Imaging.jpeg, Vcl.WinXPanels, Vcl.Mask, uAhoCorasick, Vcl.OleCtrls,
-  SHDocVw;
+  SHDocVw, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient, IdHTTP;
 
 type
   TfrmPrincipal = class(TForm)
@@ -41,6 +41,8 @@ type
     Label11: TLabel;
     mmLog: TRichEdit;
     ckbDestacar: TCheckBox;
+    IdHTTP1: TIdHTTP;
+    ckbCaseSensititve: TCheckBox;
     procedure btnProcurarClick(Sender: TObject);
     procedure btnClearClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -85,23 +87,60 @@ begin
     try
       // Adiciona as palavras chaves
       if edtPalavra1.Text <> EmptyStr then
-        AhoCorasick.AddWord(edtPalavra1.Text);
+      begin
+        if ckbCaseSensititve.Checked then
+        begin
+          AhoCorasick.AddWord(LowerCase(edtPalavra1.Text));
+        end else
+        begin
+          AhoCorasick.AddWord(edtPalavra1.Text);
+        end;
+      end;
 
       if edtPalavra2.Text <> EmptyStr then
-        AhoCorasick.AddWord(edtPalavra2.Text);
+      begin
+        if ckbCaseSensititve.Checked then
+        begin
+          AhoCorasick.AddWord(LowerCase(edtPalavra2.Text));
+        end else
+        begin
+          AhoCorasick.AddWord(edtPalavra2.Text);
+        end;
+      end;
 
       if edtPalavra3.Text <> EmptyStr then
-        AhoCorasick.AddWord(edtPalavra3.Text);
+      begin
+        if ckbCaseSensititve.Checked then
+        begin
+          AhoCorasick.AddWord(LowerCase(edtPalavra3.Text));
+        end else
+        begin
+          AhoCorasick.AddWord(edtPalavra3.Text);
+        end;
+      end;
 
       if edtPalavra4.Text <> EmptyStr then
-        AhoCorasick.AddWord(edtPalavra4.Text);
+      begin
+        if ckbCaseSensititve.Checked then
+        begin
+          AhoCorasick.AddWord(LowerCase(edtPalavra4.Text));
+        end else
+        begin
+          AhoCorasick.AddWord(edtPalavra4.Text);
+        end;
+      end;
 
       // Construa a estrutura de busca
       AhoCorasick.Build;
 
       // Realize a busca no texto
-      Matches := AhoCorasick.FindWords(mmRichEdit.Text);
-      //HighLightWords(mmRichEdit.Text, Matches);
+      if ckbCaseSensititve.Checked then
+      begin
+        Matches := AhoCorasick.FindWords(mmRichEdit.Text);
+      end else
+      begin
+        Matches := AhoCorasick.FindWords(LowerCase(mmRichEdit.Text));
+      end;
 
       // Exibe as palavras encontradas no log
       if Length(Matches) > 0 then
@@ -117,7 +156,6 @@ begin
           end;
 
           mmLog.Lines.Add(Format('--Palavra encontrada: "%s" (Posição: %d)', [Matches[i].Word, Matches[i].Position]));
-
         end;
       end else
       begin
@@ -141,7 +179,13 @@ begin
 
   // Percorre o texto do RichEdit em busca da palavra
   repeat
-    FoundPos := RichEdit.FindText(SearchWord, StartPos, Length(RichEdit.Text), []);
+    if(ckbCaseSensititve.Checked) then
+    begin
+      FoundPos := RichEdit.FindText(SearchWord, StartPos, Length(RichEdit.Text), [stMatchCase]);
+    end else
+    begin
+      FoundPos := RichEdit.FindText(SearchWord, StartPos, Length(RichEdit.Text), []);
+    end;
 
     // Se a palavra for encontrada, altera a cor de fundo
     if FoundPos >= 0 then

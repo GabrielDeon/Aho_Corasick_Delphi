@@ -22,6 +22,8 @@ object frmPrincipal: TfrmPrincipal
     Align = alClient
     ShowCaption = False
     TabOrder = 0
+    ExplicitWidth = 844
+    ExplicitHeight = 634
     object pnTextoBase: TPanel
       Left = 359
       Top = 1
@@ -33,6 +35,8 @@ object frmPrincipal: TfrmPrincipal
       ShowCaption = False
       TabOrder = 0
       StyleElements = [seFont, seClient]
+      ExplicitLeft = 353
+      ExplicitHeight = 632
       object pnTextoBaseHeader: TPanel
         AlignWithMargins = True
         Left = 1
@@ -108,6 +112,7 @@ object frmPrincipal: TfrmPrincipal
         TabOrder = 1
         StyleName = 'Tablet Light'
         OnClick = btnClearClick
+        ExplicitHeight = 30
       end
     end
     object pnConfigs: TPanel
@@ -121,7 +126,8 @@ object frmPrincipal: TfrmPrincipal
       ShowCaption = False
       TabOrder = 1
       StyleElements = [seFont, seClient]
-      ExplicitLeft = 0
+      ExplicitWidth = 352
+      ExplicitHeight = 632
       object Label3: TLabel
         Left = 15
         Top = 61
@@ -392,6 +398,8 @@ object frmPrincipal: TfrmPrincipal
         Caption = 'pnLog'
         ShowCaption = False
         TabOrder = 10
+        ExplicitTop = 368
+        ExplicitWidth = 350
         object Panel2: TPanel
           AlignWithMargins = True
           Left = 1
@@ -408,9 +416,7 @@ object frmPrincipal: TfrmPrincipal
           ShowCaption = False
           TabOrder = 0
           StyleElements = [seFont, seBorder]
-          ExplicitLeft = 0
-          ExplicitTop = 222
-          ExplicitWidth = 356
+          ExplicitWidth = 348
           object Label11: TLabel
             AlignWithMargins = True
             Left = 11
@@ -455,11 +461,12 @@ object frmPrincipal: TfrmPrincipal
           ScrollBars = ssVertical
           TabOrder = 1
           StyleElements = [seFont, seBorder]
+          ExplicitWidth = 338
         end
       end
       object ckbDestacar: TCheckBox
         Left = 15
-        Top = 304
+        Top = 296
         Width = 161
         Height = 17
         Caption = 'Destacar Ocorr'#234'ncias'
@@ -471,6 +478,36 @@ object frmPrincipal: TfrmPrincipal
         ParentFont = False
         TabOrder = 11
       end
+      object ckbCaseSensititve: TCheckBox
+        Left = 15
+        Top = 328
+        Width = 161
+        Height = 17
+        Caption = 'Case Sensitive'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 12
+      end
     end
+  end
+  object IdHTTP1: TIdHTTP
+    ProxyParams.BasicAuthentication = False
+    ProxyParams.ProxyPort = 0
+    Request.ContentLength = -1
+    Request.ContentRangeEnd = -1
+    Request.ContentRangeStart = -1
+    Request.ContentRangeInstanceLength = -1
+    Request.Accept = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+    Request.BasicAuthentication = False
+    Request.UserAgent = 'Mozilla/3.0 (compatible; Indy Library)'
+    Request.Ranges.Units = 'bytes'
+    Request.Ranges = <>
+    HTTPOptions = [hoForceEncodeParams]
+    Left = 791
+    Top = 577
   end
 end

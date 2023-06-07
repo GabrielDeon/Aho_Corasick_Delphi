@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.ComCtrls,
   Vcl.Imaging.jpeg, Vcl.WinXPanels, Vcl.Mask, uAhoCorasick, Vcl.OleCtrls,
-  SHDocVw;
+  SHDocVw, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient, IdHTTP;
 
 type
   TfrmPrincipal = class(TForm)
@@ -40,6 +40,9 @@ type
     Panel2: TPanel;
     Label11: TLabel;
     mmLog: TRichEdit;
+    ckbDestacar: TCheckBox;
+    IdHTTP1: TIdHTTP;
+    ckbCaseSensititve: TCheckBox;
     procedure btnProcurarClick(Sender: TObject);
     procedure btnClearClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -100,22 +103,26 @@ begin
 
       // Realize a busca no texto
       Matches := AhoCorasick.FindWords(mmRichEdit.Text);
-      HighLightWords(mmRichEdit.Text, Matches);
 
-      // Exiba as palavras encontradas no log
+      // Exibe as palavras encontradas no log
       if Length(Matches) > 0 then
       begin
         mmLog.Clear;
         pnLog.Visible := True;
 
         for i := 0 to Length(Matches) - 1 do
+        begin
+          if ckbDestacar.Checked then
+          begin
+            FindAndHighlightWord(mmRichEdit, Matches[i].Word);
+          end;
+
           mmLog.Lines.Add(Format('--Palavra encontrada: "%s" (Posição: %d)', [Matches[i].Word, Matches[i].Position]));
+        end;
       end else
       begin
         ShowMessage('Nenhuma ocorrência encontrada!');
       end;
-
-
 
     finally
       AhoCorasick.Free;
@@ -134,7 +141,13 @@ begin
 
   // Percorre o texto do RichEdit em busca da palavra
   repeat
-    FoundPos := RichEdit.FindText(SearchWord, StartPos, Length(RichEdit.Text), []);
+    if(ckbCaseSensititve.Checked) then
+    begin
+      FoundPos := RichEdit.FindText(SearchWord, StartPos, Length(RichEdit.Text), [stMatchCase]);
+    end else
+    begin
+      FoundPos := RichEdit.FindText(SearchWord, StartPos, Length(RichEdit.Text), []);
+    end;
 
     // Se a palavra for encontrada, altera a cor de fundo
     if FoundPos >= 0 then
@@ -142,6 +155,7 @@ begin
       RichEdit.SelStart := FoundPos;
       RichEdit.SelLength := Length(SearchWord);
       RichEdit.SelAttributes.BackColor := clYellow;
+      RichEdit.Refresh;
 
       // Move a posição inicial para continuar a busca
       StartPos := FoundPos + Length(SearchWord);
