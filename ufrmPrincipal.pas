@@ -6,9 +6,11 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.ComCtrls,
   Vcl.Imaging.jpeg, Vcl.WinXPanels, Vcl.Mask, uAhoCorasick, Vcl.OleCtrls,
-  SHDocVw, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient, IdHTTP;
+  SHDocVw, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient, System.JSON,
+  REST.Types, REST.Client, Data.Bind.Components, Data.Bind.ObjectScope, IdSSLOpenSSL, IdHTTP;
 
 type
+  TLinguagem = (liNenhum, liInglês, liChinês, liFrancês, liAlemão, liItaliano, liPortuguês, liRusso);
   TfrmPrincipal = class(TForm)
     pnBusca: TPanel;
     pnTextoBase: TPanel;
@@ -41,11 +43,15 @@ type
     Label11: TLabel;
     mmLog: TRichEdit;
     ckbDestacar: TCheckBox;
-    IdHTTP1: TIdHTTP;
     ckbCaseSensititve: TCheckBox;
+    RESTClient1: TRESTClient;
+    RESTRequest1: TRESTRequest;
+    RESTResponse1: TRESTResponse;
+    Button1: TButton;
     procedure btnProcurarClick(Sender: TObject);
     procedure btnClearClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+
   private
     { Private declarations }
     procedure HighLightWords(const text: string; const matchResults: TArray<TMatchResult>);

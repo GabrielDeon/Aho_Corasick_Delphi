@@ -114,6 +114,14 @@ object frmPrincipal: TfrmPrincipal
         OnClick = btnClearClick
         ExplicitHeight = 30
       end
+      object Button1: TButton
+        Left = 48
+        Top = 584
+        Width = 75
+        Height = 25
+        Caption = 'Button1'
+        TabOrder = 3
+      end
     end
     object pnConfigs: TPanel
       Left = 1
@@ -330,9 +338,11 @@ object frmPrincipal: TfrmPrincipal
         Items.Strings = (
           'Nenhum'
           'Ingl'#234's'
-          'Espanhol '
-          'Italiano'
+          'Chin'#234's'
           'Franc'#234's'
+          'Alem'#227'o'
+          'Italiano'
+          'Portugu'#234's'
           'Russo')
       end
       object ComboBox3: TComboBox
@@ -348,9 +358,11 @@ object frmPrincipal: TfrmPrincipal
         Items.Strings = (
           'Nenhum'
           'Ingl'#234's'
-          'Espanhol '
-          'Italiano'
+          'Chin'#234's'
           'Franc'#234's'
+          'Alem'#227'o'
+          'Italiano'
+          'Portugu'#234's'
           'Russo')
       end
       object ComboBox4: TComboBox
@@ -366,9 +378,11 @@ object frmPrincipal: TfrmPrincipal
         Items.Strings = (
           'Nenhum'
           'Ingl'#234's'
-          'Espanhol '
-          'Italiano'
+          'Chin'#234's'
           'Franc'#234's'
+          'Alem'#227'o'
+          'Italiano'
+          'Portugu'#234's'
           'Russo')
       end
       object ComboBox2: TComboBox
@@ -384,9 +398,11 @@ object frmPrincipal: TfrmPrincipal
         Items.Strings = (
           'Nenhum'
           'Ingl'#234's'
-          'Espanhol '
-          'Italiano'
+          'Chin'#234's'
           'Franc'#234's'
+          'Alem'#227'o'
+          'Italiano'
+          'Portugu'#234's'
           'Russo')
       end
       object pnLog: TPanel
@@ -494,20 +510,26 @@ object frmPrincipal: TfrmPrincipal
       end
     end
   end
-  object IdHTTP1: TIdHTTP
-    ProxyParams.BasicAuthentication = False
-    ProxyParams.ProxyPort = 0
-    Request.ContentLength = -1
-    Request.ContentRangeEnd = -1
-    Request.ContentRangeStart = -1
-    Request.ContentRangeInstanceLength = -1
-    Request.Accept = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
-    Request.BasicAuthentication = False
-    Request.UserAgent = 'Mozilla/3.0 (compatible; Indy Library)'
-    Request.Ranges.Units = 'bytes'
-    Request.Ranges = <>
-    HTTPOptions = [hoForceEncodeParams]
-    Left = 791
-    Top = 577
+  object RESTClient1: TRESTClient
+    Accept = 'application/json, text/plain; q=0.9, text/html;q=0.8,'
+    AcceptCharset = 'utf-8, *;q=0.8'
+    BaseURL = 'https://translate.argosopentech.com/translate'
+    Params = <>
+    SynchronizedEvents = False
+    Left = 767
+    Top = 57
+  end
+  object RESTRequest1: TRESTRequest
+    Client = RESTClient1
+    Params = <>
+    Response = RESTResponse1
+    SynchronizedEvents = False
+    Left = 767
+    Top = 177
+  end
+  object RESTResponse1: TRESTResponse
+    ContentType = 'text/html'
+    Left = 767
+    Top = 113
   end
 end
