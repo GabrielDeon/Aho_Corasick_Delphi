@@ -114,14 +114,6 @@ object frmPrincipal: TfrmPrincipal
         OnClick = btnClearClick
         ExplicitHeight = 30
       end
-      object Button1: TButton
-        Left = 48
-        Top = 584
-        Width = 75
-        Height = 25
-        Caption = 'Button1'
-        TabOrder = 3
-      end
     end
     object pnConfigs: TPanel
       Left = 1
@@ -152,35 +144,7 @@ object frmPrincipal: TfrmPrincipal
       end
       object Label4: TLabel
         Left = 15
-        Top = 117
-        Width = 81
-        Height = 17
-        Caption = 'Palavra Chave'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWhite
-        Font.Height = -13
-        Font.Name = 'Segoe UI'
-        Font.Style = []
-        ParentFont = False
-        StyleElements = [seClient, seBorder]
-      end
-      object Label5: TLabel
-        Left = 15
-        Top = 173
-        Width = 81
-        Height = 17
-        Caption = 'Palavra Chave'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWhite
-        Font.Height = -13
-        Font.Name = 'Segoe UI'
-        Font.Style = []
-        ParentFont = False
-        StyleElements = [seClient, seBorder]
-      end
-      object Label6: TLabel
-        Left = 15
-        Top = 229
+        Top = 141
         Width = 81
         Height = 17
         Caption = 'Palavra Chave'
@@ -193,39 +157,11 @@ object frmPrincipal: TfrmPrincipal
         StyleElements = [seClient, seBorder]
       end
       object Label7: TLabel
-        Left = 209
+        Left = 219
         Top = 61
-        Width = 60
+        Width = 85
         Height = 17
-        Caption = 'Tradu'#231#245'es'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWhite
-        Font.Height = -13
-        Font.Name = 'Segoe UI'
-        Font.Style = []
-        ParentFont = False
-        StyleElements = [seClient, seBorder]
-      end
-      object Label9: TLabel
-        Left = 209
-        Top = 173
-        Width = 60
-        Height = 17
-        Caption = 'Tradu'#231#245'es'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWhite
-        Font.Height = -13
-        Font.Name = 'Segoe UI'
-        Font.Style = []
-        ParentFont = False
-        StyleElements = [seClient, seBorder]
-      end
-      object Label10: TLabel
-        Left = 210
-        Top = 230
-        Width = 60
-        Height = 17
-        Caption = 'Tradu'#231#245'es'
+        Caption = 'Tradu'#231#227'o para'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWhite
         Font.Height = -13
@@ -235,11 +171,39 @@ object frmPrincipal: TfrmPrincipal
         StyleElements = [seClient, seBorder]
       end
       object Label8: TLabel
-        Left = 210
-        Top = 118
-        Width = 60
+        Left = 220
+        Top = 142
+        Width = 85
         Height = 17
-        Caption = 'Tradu'#231#245'es'
+        Caption = 'Tradu'#231#227'o para'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWhite
+        Font.Height = -13
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        ParentFont = False
+        StyleElements = [seClient, seBorder]
+      end
+      object Label5: TLabel
+        Left = 15
+        Top = 222
+        Width = 81
+        Height = 17
+        Caption = 'Palavra Chave'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWhite
+        Font.Height = -13
+        Font.Name = 'Segoe UI'
+        Font.Style = []
+        ParentFont = False
+        StyleElements = [seClient, seBorder]
+      end
+      object Label6: TLabel
+        Left = 220
+        Top = 223
+        Width = 85
+        Height = 17
+        Caption = 'Tradu'#231#227'o para'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWhite
         Font.Height = -13
@@ -262,7 +226,7 @@ object frmPrincipal: TfrmPrincipal
         Color = 16419907
         ParentBackground = False
         ShowCaption = False
-        TabOrder = 9
+        TabOrder = 5
         StyleElements = [seFont, seBorder]
         ExplicitWidth = 350
         object Label2: TLabel
@@ -288,53 +252,42 @@ object frmPrincipal: TfrmPrincipal
       end
       object btnProcurar: TButton
         Left = 209
-        Top = 296
+        Top = 320
         Width = 118
         Height = 35
         Caption = 'Procurar'
-        TabOrder = 8
+        TabOrder = 4
         StyleName = 'Tablet Light'
         OnClick = btnProcurarClick
       end
       object edtPalavra1: TEdit
         Left = 15
         Top = 82
-        Width = 185
+        Width = 195
         Height = 23
         ImeName = 'Portuguese (Brazilian ABNT)'
         TabOrder = 0
+        OnChange = edtPalavra1Change
       end
       object edtPalavra2: TEdit
         Left = 15
-        Top = 138
-        Width = 185
+        Top = 162
+        Width = 195
         Height = 23
         TabOrder = 2
+        OnChange = edtPalavra2Change
       end
-      object edtPalavra3: TEdit
-        Left = 15
-        Top = 194
-        Width = 185
-        Height = 23
-        TabOrder = 4
-      end
-      object edtPalavra4: TEdit
-        Left = 15
-        Top = 250
-        Width = 185
-        Height = 23
-        TabOrder = 6
-      end
-      object ComboBox1: TComboBox
-        Left = 209
+      object cbxtraducao1: TComboBox
+        Left = 219
         Top = 82
         Width = 119
         Height = 23
         Style = csDropDownList
-        ImeName = 'cbxLinguagens'
+        ImeName = 'Portuguese (Brazilian ABNT)'
         ItemIndex = 0
         TabOrder = 1
         Text = 'Nenhum'
+        OnChange = cbxtraducao1Change
         Items.Strings = (
           'Nenhum'
           'Ingl'#234's'
@@ -345,49 +298,9 @@ object frmPrincipal: TfrmPrincipal
           'Portugu'#234's'
           'Russo')
       end
-      object ComboBox3: TComboBox
-        Left = 209
-        Top = 194
-        Width = 119
-        Height = 23
-        Style = csDropDownList
-        ImeName = 'cbxLinguagens'
-        ItemIndex = 0
-        TabOrder = 5
-        Text = 'Nenhum'
-        Items.Strings = (
-          'Nenhum'
-          'Ingl'#234's'
-          'Chin'#234's'
-          'Franc'#234's'
-          'Alem'#227'o'
-          'Italiano'
-          'Portugu'#234's'
-          'Russo')
-      end
-      object ComboBox4: TComboBox
-        Left = 210
-        Top = 251
-        Width = 119
-        Height = 23
-        Style = csDropDownList
-        ImeName = 'cbxLinguagens'
-        ItemIndex = 0
-        TabOrder = 7
-        Text = 'Nenhum'
-        Items.Strings = (
-          'Nenhum'
-          'Ingl'#234's'
-          'Chin'#234's'
-          'Franc'#234's'
-          'Alem'#227'o'
-          'Italiano'
-          'Portugu'#234's'
-          'Russo')
-      end
-      object ComboBox2: TComboBox
-        Left = 210
-        Top = 139
+      object cbxtraducao2: TComboBox
+        Left = 220
+        Top = 163
         Width = 119
         Height = 23
         Style = csDropDownList
@@ -395,6 +308,7 @@ object frmPrincipal: TfrmPrincipal
         ItemIndex = 0
         TabOrder = 3
         Text = 'Nenhum'
+        OnChange = cbxtraducao2Change
         Items.Strings = (
           'Nenhum'
           'Ingl'#234's'
@@ -407,15 +321,13 @@ object frmPrincipal: TfrmPrincipal
       end
       object pnLog: TPanel
         Left = 1
-        Top = 374
+        Top = 400
         Width = 356
-        Height = 263
+        Height = 237
         Align = alBottom
         Caption = 'pnLog'
         ShowCaption = False
-        TabOrder = 10
-        ExplicitTop = 368
-        ExplicitWidth = 350
+        TabOrder = 6
         object Panel2: TPanel
           AlignWithMargins = True
           Left = 1
@@ -459,7 +371,7 @@ object frmPrincipal: TfrmPrincipal
           Left = 6
           Top = 47
           Width = 344
-          Height = 215
+          Height = 189
           Margins.Left = 5
           Margins.Top = 5
           Margins.Right = 5
@@ -478,11 +390,12 @@ object frmPrincipal: TfrmPrincipal
           TabOrder = 1
           StyleElements = [seFont, seBorder]
           ExplicitWidth = 338
+          ExplicitHeight = 215
         end
       end
       object ckbDestacar: TCheckBox
         Left = 15
-        Top = 296
+        Top = 320
         Width = 161
         Height = 17
         Caption = 'Destacar Ocorr'#234'ncias'
@@ -492,11 +405,11 @@ object frmPrincipal: TfrmPrincipal
         Font.Name = 'Segoe UI'
         Font.Style = []
         ParentFont = False
-        TabOrder = 11
+        TabOrder = 7
       end
       object ckbCaseSensititve: TCheckBox
         Left = 15
-        Top = 328
+        Top = 352
         Width = 161
         Height = 17
         Caption = 'Case Sensitive'
@@ -506,30 +419,61 @@ object frmPrincipal: TfrmPrincipal
         Font.Name = 'Segoe UI'
         Font.Style = []
         ParentFont = False
+        TabOrder = 8
+      end
+      object edtTraducao1: TEdit
+        Left = 15
+        Top = 111
+        Width = 195
+        Height = 23
+        Enabled = False
+        ImeName = 'Portuguese (Brazilian ABNT)'
+        TabOrder = 9
+      end
+      object edtTraducao2: TEdit
+        Left = 15
+        Top = 190
+        Width = 195
+        Height = 23
+        TabOrder = 10
+      end
+      object edtPalavra3: TEdit
+        Left = 15
+        Top = 243
+        Width = 195
+        Height = 23
+        ImeName = 'Portuguese (Brazilian ABNT)'
+        TabOrder = 11
+        OnChange = edtPalavra3Change
+      end
+      object cbxTraducao3: TComboBox
+        Left = 220
+        Top = 244
+        Width = 119
+        Height = 23
+        Style = csDropDownList
+        ImeName = 'Portuguese (Brazilian ABNT)'
+        ItemIndex = 0
         TabOrder = 12
+        Text = 'Nenhum'
+        OnChange = cbxTraducao3Change
+        Items.Strings = (
+          'Nenhum'
+          'Ingl'#234's'
+          'Chin'#234's'
+          'Franc'#234's'
+          'Alem'#227'o'
+          'Italiano'
+          'Portugu'#234's'
+          'Russo')
+      end
+      object edtTraducao3: TEdit
+        Left = 15
+        Top = 271
+        Width = 195
+        Height = 23
+        TabOrder = 13
       end
     end
-  end
-  object RESTClient1: TRESTClient
-    Accept = 'application/json, text/plain; q=0.9, text/html;q=0.8,'
-    AcceptCharset = 'utf-8, *;q=0.8'
-    BaseURL = 'https://translate.argosopentech.com/translate'
-    Params = <>
-    SynchronizedEvents = False
-    Left = 767
-    Top = 57
-  end
-  object RESTRequest1: TRESTRequest
-    Client = RESTClient1
-    Params = <>
-    Response = RESTResponse1
-    SynchronizedEvents = False
-    Left = 767
-    Top = 177
-  end
-  object RESTResponse1: TRESTResponse
-    ContentType = 'text/html'
-    Left = 767
-    Top = 113
   end
 end

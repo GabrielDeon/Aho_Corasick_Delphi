@@ -1,0 +1,4 @@
+Para que as requisições a API funcionem corretamente é necessário que as dlls 
+libeay32 e ssleay32 estajam junto ao executável.
+
+Em caso de erro é necessário instalar o OpenSSL através do executável.

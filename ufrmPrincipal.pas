@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.ComCtrls,
   Vcl.Imaging.jpeg, Vcl.WinXPanels, Vcl.Mask, uAhoCorasick, Vcl.OleCtrls,
   SHDocVw, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient, System.JSON,
-  REST.Types, REST.Client, Data.Bind.Components, Data.Bind.ObjectScope, IdSSLOpenSSL, IdHTTP;
+  REST.Types, REST.Client, Data.Bind.Components, Data.Bind.ObjectScope, IdSSLOpenSSL, IdHTTP, IdURI;
 
 type
   TLinguagem = (liNenhum, liInglês, liChinês, liFrancês, liAlemão, liItaliano, liPortuguês, liRusso);
@@ -24,19 +24,11 @@ type
     edtPalavra1: TEdit;
     Label4: TLabel;
     edtPalavra2: TEdit;
-    Label5: TLabel;
-    edtPalavra3: TEdit;
     mmRichEdit: TRichEdit;
-    Label6: TLabel;
-    edtPalavra4: TEdit;
     btnClear: TButton;
     Label7: TLabel;
-    ComboBox1: TComboBox;
-    ComboBox3: TComboBox;
-    ComboBox4: TComboBox;
-    ComboBox2: TComboBox;
-    Label9: TLabel;
-    Label10: TLabel;
+    cbxtraducao1: TComboBox;
+    cbxtraducao2: TComboBox;
     Label8: TLabel;
     pnLog: TPanel;
     Panel2: TPanel;
@@ -44,18 +36,34 @@ type
     mmLog: TRichEdit;
     ckbDestacar: TCheckBox;
     ckbCaseSensititve: TCheckBox;
-    RESTClient1: TRESTClient;
-    RESTRequest1: TRESTRequest;
-    RESTResponse1: TRESTResponse;
-    Button1: TButton;
+    edtTraducao1: TEdit;
+    edtTraducao2: TEdit;
+    Label5: TLabel;
+    Label6: TLabel;
+    edtPalavra3: TEdit;
+    cbxTraducao3: TComboBox;
+    edtTraducao3: TEdit;
     procedure btnProcurarClick(Sender: TObject);
     procedure btnClearClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+    procedure cbxtraducao1Change(Sender: TObject);
+    procedure cbxtraducao2Change(Sender: TObject);
+    procedure cbxTraducao3Change(Sender: TObject);
+    procedure edtPalavra1Change(Sender: TObject);
+    procedure edtPalavra2Change(Sender: TObject);
+    procedure edtPalavra3Change(Sender: TObject);
 
   private
     { Private declarations }
     procedure HighLightWords(const text: string; const matchResults: TArray<TMatchResult>);
     procedure FindAndHighlightWord(RichEdit: TRichEdit; const SearchWord: string);
+    function TranslateText(pPalavra: string; pTargetLanguage: string):string;
+    function GetTranslatedTextFromResponse(const Response: string): string;
+    procedure ControlaCbxTraducoes(pCBX: TComboBox; pEdit: TEdit; pPalavra: TEdit);
+    procedure ControlaEditPalavra(pEditTraducao: TEdit; pCbxTraducao: TComboBox);
+    function GetSiglaLinguagem(pLinguagem: string): string;
+    procedure AdicionarPalavraPesquisa(pEdit: TEdit; pAhoCorasick: TAhoCorasick);
   public
     { Public declarations }
   end;
@@ -67,6 +75,21 @@ implementation
 
 {$R *.dfm}
 
+procedure TfrmPrincipal.AdicionarPalavraPesquisa(pEdit: TEdit; pAhoCorasick: TAhoCorasick);
+begin
+  if pEdit.Text <> EmptyStr then
+  begin
+    if ckbCaseSensititve.Checked then
+    begin
+      pAhoCorasick.AddWord(LowerCase(pEdit.Text));
+    end else
+    begin
+      pAhoCorasick.AddWord(pEdit.Text);
+    end;
+  end;
+end;
+
+//Limpa os memo e deixa o log invisível
 procedure TfrmPrincipal.btnClearClick(Sender: TObject);
 begin
   mmRichEdit.Clear;
@@ -92,54 +115,19 @@ begin
 
     try
       // Adiciona as palavras chaves
-      if edtPalavra1.Text <> EmptyStr then
-      begin
-        if ckbCaseSensititve.Checked then
-        begin
-          AhoCorasick.AddWord(LowerCase(edtPalavra1.Text));
-        end else
-        begin
-          AhoCorasick.AddWord(edtPalavra1.Text);
-        end;
-      end;
+      AdicionarPalavraPesquisa(edtPalavra1, AhoCorasick);
+      AdicionarPalavraPesquisa(edtPalavra2, AhoCorasick);
+      AdicionarPalavraPesquisa(edtPalavra3, AhoCorasick);
 
-      if edtPalavra2.Text <> EmptyStr then
-      begin
-        if ckbCaseSensititve.Checked then
-        begin
-          AhoCorasick.AddWord(LowerCase(edtPalavra2.Text));
-        end else
-        begin
-          AhoCorasick.AddWord(edtPalavra2.Text);
-        end;
-      end;
+      //Adiciona as Traduções
+      AdicionarPalavraPesquisa(edtTraducao1, AhoCorasick);
+      AdicionarPalavraPesquisa(edtTraducao2, AhoCorasick);
+      AdicionarPalavraPesquisa(edtTraducao3, AhoCorasick);
 
-      if edtPalavra3.Text <> EmptyStr then
-      begin
-        if ckbCaseSensititve.Checked then
-        begin
-          AhoCorasick.AddWord(LowerCase(edtPalavra3.Text));
-        end else
-        begin
-          AhoCorasick.AddWord(edtPalavra3.Text);
-        end;
-      end;
-
-      if edtPalavra4.Text <> EmptyStr then
-      begin
-        if ckbCaseSensititve.Checked then
-        begin
-          AhoCorasick.AddWord(LowerCase(edtPalavra4.Text));
-        end else
-        begin
-          AhoCorasick.AddWord(edtPalavra4.Text);
-        end;
-      end;
-
-      // Construa a estrutura de busca
+      //Constroi a estrutura de busca
       AhoCorasick.Build;
 
-      // Realize a busca no texto
+      //Realize a busca no texto
       if ckbCaseSensititve.Checked then
       begin
         Matches := AhoCorasick.FindWords(mmRichEdit.Text);
@@ -148,7 +136,7 @@ begin
         Matches := AhoCorasick.FindWords(LowerCase(mmRichEdit.Text));
       end;
 
-      // Exibe as palavras encontradas no log
+      //Exibe as palavras encontradas no log
       if Length(Matches) > 0 then
       begin
         mmLog.Clear;
@@ -167,12 +155,32 @@ begin
       begin
         ShowMessage('Nenhuma ocorrência encontrada!');
       end;
-
     finally
+      //Libera os objetos da memória
       AhoCorasick.Free;
       mmLog.Refresh;
     end;
   end;
+end;
+
+procedure TfrmPrincipal.Button1Click(Sender: TObject);
+begin
+//  TranslateText;
+end;
+
+procedure TfrmPrincipal.cbxtraducao1Change(Sender: TObject);
+begin
+  ControlaCbxTraducoes(cbxtraducao1, edtTraducao1, edtPalavra1);
+end;
+
+procedure TfrmPrincipal.cbxtraducao2Change(Sender: TObject);
+begin
+  ControlaCbxTraducoes(cbxtraducao2, edtTraducao2, edtPalavra2);
+end;
+
+procedure TfrmPrincipal.cbxTraducao3Change(Sender: TObject);
+begin
+  ControlaCbxTraducoes(cbxTraducao3, edtTraducao3, edtPalavra3);
 end;
 
 procedure TfrmPrincipal.FindAndHighlightWord(RichEdit: TRichEdit;
@@ -210,6 +218,58 @@ end;
 procedure TfrmPrincipal.FormCreate(Sender: TObject);
 begin
   pnLog.Visible := False;
+  edtTraducao1.Enabled := False;
+  edtTraducao2.Enabled := False;
+  edtTraducao3.Enabled := False;
+end;
+
+//Com base na linguágem retorna a sigla a ser usada na API
+function TfrmPrincipal.GetSiglaLinguagem(pLinguagem: string): string;
+begin
+  if pLinguagem = 'Inglês' then
+  begin
+    result := 'en';
+  end else
+  if pLinguagem = 'Chinês' then
+  begin
+    result := 'zh';
+  end else
+  if pLinguagem = 'Francês' then
+  begin
+    result := 'fr';
+  end else
+  if pLinguagem = 'Alemão' then
+  begin
+    result := 'de';
+  end else
+  if pLinguagem = 'Italiano' then
+  begin
+    result := 'it';
+  end else
+  if pLinguagem = 'Português' then
+  begin
+    result := 'pt';
+  end else
+  if pLinguagem = 'Russo' then
+  begin
+    result := 'ru';
+  end;
+end;
+
+function TfrmPrincipal.GetTranslatedTextFromResponse(const Response: string): string;
+var
+  JSONValue: TJSONValue;
+begin
+  JSONValue := TJSONObject.ParseJSONValue(Response);
+
+  try
+    if (JSONValue is TJSONObject) and (TJSONObject(JSONValue).GetValue('translatedText') <> nil) then
+      Result := TJSONObject(JSONValue).GetValue('translatedText').Value
+    else
+      Result := '';
+  finally
+    JSONValue.Free;
+  end;
 end;
 
 procedure TfrmPrincipal.HighLightWords(const text: string; const matchResults: TArray<TMatchResult>);
@@ -229,6 +289,92 @@ begin
     mmRichEdit.SelLength := Length(matchResults[i].Word);
     mmRichEdit.SelAttributes.BackColor := clYellow;
     mmRichEdit.Refresh;
+  end;
+end;
+
+//Controla o combobox das traduções
+procedure TfrmPrincipal.ControlaCbxTraducoes(pCBX: TComboBox; pEdit: TEdit; pPalavra: TEdit);
+begin
+  if pCBX.Text = 'Nenhum' then
+  begin
+    pEdit.Clear;
+    pEdit.Enabled := False
+  end else
+  begin
+    if(pPalavra.Text = EmptyStr) then
+    begin
+      ShowMessage('Você deve digitar uma palavra antes de começar a tradução!');
+      pCBX.ItemIndex := 0;
+    end else
+    begin
+     pEdit.Enabled := True;
+     pEdit.Text := LowerCase(TranslateText(pPalavra.Text, pCBX.Text));
+    end;
+  end;
+end;
+
+//Controla o edit da palavra chave
+procedure TfrmPrincipal.ControlaEditPalavra(pEditTraducao: TEdit; pCbxTraducao: TComboBox);
+begin
+  if pCbxTraducao.ItemIndex <> 0 then
+  begin
+    pCbxTraducao.ItemIndex := 0;
+  end;
+  if pEditTraducao.Text <> EmptyStr then
+  begin
+    pEditTraducao.Clear;
+  end;
+end;
+
+procedure TfrmPrincipal.edtPalavra1Change(Sender: TObject);
+begin
+  ControlaEditPalavra(edtTraducao1, cbxtraducao1);
+end;
+
+procedure TfrmPrincipal.edtPalavra2Change(Sender: TObject);
+begin
+  ControlaEditPalavra(edtTraducao2, cbxtraducao2);
+end;
+
+procedure TfrmPrincipal.edtPalavra3Change(Sender: TObject);
+begin
+  ControlaEditPalavra(edtTraducao3, cbxtraducao3);
+end;
+
+function TfrmPrincipal.TranslateText(pPalavra: string; pTargetLanguage: string): string;
+var
+  HttpClient: TIdHTTP;
+  IdSSL: TIdSSLIOHandlerSocketOpenSSL;
+  RequestBody: TStringStream;
+  Response: string;
+  sSigleLinguagem: string;
+begin
+  HttpClient := TIdHTTP.Create;
+  RequestBody := TStringStream.Create;
+  IdSSL := TIdSSLIOHandlerSocketOpenSSL.Create(HttpClient);
+
+  sSigleLinguagem := GetSiglaLinguagem(pTargetLanguage);
+
+  try
+    IdSSL.SSLOptions.Method := sslvTLSv1_2; // Define a versão do protocolo TLS a ser usada
+    HttpClient.IOHandler    := IdSSL; // Atribui o sslIOHandler ao HttpClient
+    RequestBody.WriteString('{"q": "'+ pPalavra +'", "source": "auto", "target": "'+ sSigleLinguagem +'"}');
+    HttpClient.Request.ContentType := 'application/json';
+
+    try
+      Response := HttpClient.Post('https://translate.argosopentech.com/translate', RequestBody);
+      result   := GetTranslatedTextFromResponse(Response);
+    except
+      on E: Exception do
+      begin
+        ShowMessage('Não foi possível encontrar uma tradução. Erro:' + E.Message);
+      end;
+    end;
+
+  finally
+    HttpClient.Free;
+    RequestBody.Free;
+    IdSSL.Free; // Libera a instância do sslIOHandler
   end;
 end;
 
